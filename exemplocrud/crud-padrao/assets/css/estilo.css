@@ -1,0 +1,10 @@
+.table-titulo{
+    background-color: #A9A9A9;
+}
+
+.img-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
