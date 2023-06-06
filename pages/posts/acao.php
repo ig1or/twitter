@@ -64,13 +64,15 @@ function salvar()
 
     if ($stmt->rowCount() > 0) {
         // O ID do usuário é válido, prosseguir com a inserção do post
-        $stmt = $conexao->prepare("INSERT INTO posts (id, content, user_id, image_url, created_at) VALUES (:id, :content, :user_id, :image_url, :created_at)");
+        $stmt = $conexao->prepare("INSERT INTO posts (id, content, user_id, image_url, created_at, hashtags) VALUES (:id, :content, :user_id, :image_url, :created_at, :hashtags)");
 
         $stmt->bindParam(':id', $dados['id'], PDO::PARAM_INT);
         $stmt->bindParam(':content', $dados['content']);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT); // Correção feita aqui
         $stmt->bindParam(':image_url', $dados['image_url']);
         $stmt->bindParam(':created_at', $dados['created_at']);
+        $stmt->bindParam(':hashtags', $dados['hashtags']);
+
         
         $stmt->execute();
         header("location:index.php");
@@ -88,6 +90,8 @@ function formToArray()
     $image_url = isset($_FILES['image']['name']) ? $_FILES['image']['name'] : '';
     $created_at = isset($_POST['created_at']) ? $_POST['created_at'] : 0;
     $user_id = isset($_POST['Usuario_codigo']) ? $_POST['Usuario_codigo'] : '';
+    $hashtags = isset($_POST['hashtags']) ? $_POST['hashtags'] : '';
+
 
     $dados = array(
         'id' => $id,
@@ -95,6 +99,8 @@ function formToArray()
         'image_url' => $image_url,
         'created_at' => $created_at,
         'user_id' => $user_id,
+        'hashtags' => $hashtags,
+
     );
 
     return $dados;

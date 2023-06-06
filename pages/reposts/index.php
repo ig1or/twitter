@@ -19,7 +19,7 @@ if ($acao == 'editar') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Likes</title>
+    <title>Reposts</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <style>
         body {
@@ -49,7 +49,7 @@ if ($acao == 'editar') {
             margin-top: 10px;
         }
 
-        table {
+        .table {
             margin-top: 20px;
         }
 
@@ -63,7 +63,7 @@ if ($acao == 'editar') {
 <body>
     <div class="container">
         <a class="btn btn-primary" href="../../pages/posts/">Voltar</a>
-        <h1>Likes</h1>
+        <h1>Retuitar</h1>
         <form action="acao.php" method="post">
             <div class="mb-3">
                 <label for="post_id" class="form-label">Post:</label>
@@ -108,25 +108,24 @@ if ($acao == 'editar') {
                 </tr>
             </thead>
             <tbody>
-    <?php
-    $conexao = Conexao::getInstance();
-    $consulta = $conexao->query("SELECT * FROM likes;");
-    while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-        $postConsulta = $conexao->query("SELECT * FROM posts WHERE id = {$linha['post_id']}");
-        $post = $postConsulta->fetch(PDO::FETCH_ASSOC);
+                <?php
+                $conexao = Conexao::getInstance();
+                $consulta = $conexao->query("SELECT * FROM reposts;");
+                while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $postConsulta = $conexao->query("SELECT * FROM posts WHERE id = {$linha['post_id']}");
+                    $post = $postConsulta->fetch(PDO::FETCH_ASSOC);
 
-        $userConsulta = $conexao->query("SELECT * FROM users WHERE id = {$linha['user_id']}");
-        $user = $userConsulta->fetch(PDO::FETCH_ASSOC);
+                    $userConsulta = $conexao->query("SELECT * FROM users WHERE id = {$linha['user_id']}");
+                    $user = $userConsulta->fetch(PDO::FETCH_ASSOC);
 
-        echo "<tr>
-                <td>{$post['content']}</td>
-                <td>{$user['username']}</td>
-                <td><a class='btn btn-danger' onClick='return excluir();' href='acao.php?acao=excluir&post_id={$linha['post_id']}&user_id={$linha['user_id']}'>Excluir</a></td>
-              </tr>";
-    }
-    ?>
-</tbody>
-
+                    echo "<tr>
+                            <td>{$post['content']}</td>
+                            <td>{$user['username']}</td>
+                            <td><a class='btn btn-danger' onClick='return excluir();' href='acao.php?acao=excluir&post_id={$linha['post_id']}&user_id={$linha['user_id']}'>Excluir</a></td>
+                          </tr>";
+                }
+                ?>
+            </tbody>
         </table>
     </div>
     <script>

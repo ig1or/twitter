@@ -33,7 +33,7 @@
 
         $dados = formToArray();
         $conexao = Conexao::getInstance();
-        $sql = "DELETE FROM likes WHERE post_id = '$post_id' AND user_id = '$user_id';";
+        $sql = "DELETE FROM reposts WHERE post_id = '$post_id' AND user_id = '$user_id';";
 
         $conexao = $conexao->query($sql);
         header("location:index.php");
@@ -47,7 +47,7 @@
         $dados = formToArray();
 
         $conexao = Conexao::getInstance();
-        $sql = "UPDATE `likes` SET `post_id` = '".$dados['post_id']."', `user_id` = '".$dados['user_id']."' WHERE (`post_id` = '".$post_id.") and (`user_id` = '".$user_id."');";
+        $sql = "UPDATE `reposts` SET `post_id` = '".$dados['post_id']."', `user_id` = '".$dados['user_id']."' WHERE (`post_id` = '".$post_id.") and (`user_id` = '".$user_id."');";
 
         $conexao = $conexao->query($sql);
         header("location:index.php");
@@ -61,7 +61,7 @@
 
         $conexao = Conexao::getInstance();
 
-        $sql = "INSERT INTO likes (post_id, user_id) VALUES ('".$dados['post_id']."','".$dados['user_id']."')";
+        $sql = "INSERT INTO reposts (post_id, user_id) VALUES ('".$dados['post_id']."','".$dados['user_id']."')";
         
         $conexao = $conexao->query($sql);
         header("location:index.php");
@@ -83,7 +83,7 @@
 
     function findById($post_id, $user_id){
         $conexao = Conexao::getInstance();
-        $stmt = $conexao->prepare("SELECT * FROM likes WHERE post_id = :post_id AND user_id = :user_id");
+        $stmt = $conexao->prepare("SELECT * FROM reposts WHERE post_id = :post_id AND user_id = :user_id");
         $stmt->bindParam(':post_id', $post_id);
         $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();

@@ -5,9 +5,9 @@ include 'acao.php';
 $acao = isset($_GET['acao']) ? $_GET['acao'] : '';
 $dados = array();
 if ($acao == 'editar') {
-    $post_id = isset($_GET['post_id']) ? $_GET['post_id'] : 0;
-    $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : 0;
-    $dados = findById($post_id, $user_id);
+    $follower_id = isset($_GET['follower_id']) ? $_GET['follower_id'] : "";
+    $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : "";
+    $dados = findById($follower_id, $user_id);
     // var_dump($dados);
 }
 ?>
@@ -19,7 +19,7 @@ if ($acao == 'editar') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Likes</title>
+    <title>Reposts</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <style>
         body {
@@ -49,7 +49,7 @@ if ($acao == 'editar') {
             margin-top: 10px;
         }
 
-        table {
+        .table {
             margin-top: 20px;
         }
 
@@ -63,24 +63,12 @@ if ($acao == 'editar') {
 <body>
     <div class="container">
         <a class="btn btn-primary" href="../../pages/posts/">Voltar</a>
-        <h1>Likes</h1>
+        <h1>Seguidores</h1>
         <form action="acao.php" method="post">
-            <div class="mb-3">
-                <label for="post_id" class="form-label">Post:</label>
-                <select class="form-select" name="post_id" id="post_id">
-                    <?php
-                    $conexao = Conexao::getInstance();
-                    $consulta = $conexao->query("SELECT * FROM posts;");
-                    while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                        if ($linha['id'] == $dados['post_id']) {
-                            echo "<option value='" . $linha['id'] . "' selected>" . $linha['content'] . "</option>";
-                        } else {
-                            echo "<option value='" . $linha['id'] . "'>" . $linha['content'] . "</option>";
-                        }
-                    }
-                    ?>
-                </select>
-            </div>
+        <div class="mb-3">
+                    <label for="follower_id">ID:</label>
+                    <input type="text" class="form-control" id="follower_id" name="follower_id" value="<?php echo ($acao == 'editar') ? $dados['follower_id'] : '0'; ?>" readonly>
+                </div>
             <div class="mb-3">
                 <label for="user_id" class="form-label">Usuário:</label>
                 <select class="form-select" name="user_id" id="user_id">
@@ -102,31 +90,28 @@ if ($acao == 'editar') {
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Publicação</th>
                     <th>Usuário</th>
                     <th>Excluir</th>
                 </tr>
             </thead>
             <tbody>
-    <?php
-    $conexao = Conexao::getInstance();
-    $consulta = $conexao->query("SELECT * FROM likes;");
-    while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-        $postConsulta = $conexao->query("SELECT * FROM posts WHERE id = {$linha['post_id']}");
-        $post = $postConsulta->fetch(PDO::FETCH_ASSOC);
+                <?php
+                $conexao = Conexao::getInstance();
+                $consulta = $conexao->query("SELECT * FROM followers;");
+                while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
 
-        $userConsulta = $conexao->query("SELECT * FROM users WHERE id = {$linha['user_id']}");
-        $user = $userConsulta->fetch(PDO::FETCH_ASSOC);
+                    $userConsulta = $conexao->query("SELECT * FROM users WHERE id = {$linha['user_id']}");
+                    $user = $userConsulta->fetch(PDO::FETCH_ASSOC);
 
-        echo "<tr>
-                <td>{$post['content']}</td>
-                <td>{$user['username']}</td>
-                <td><a class='btn btn-danger' onClick='return excluir();' href='acao.php?acao=excluir&post_id={$linha['post_id']}&user_id={$linha['user_id']}'>Excluir</a></td>
-              </tr>";
-    }
-    ?>
-</tbody>
+                    
 
+                    echo "<tr>
+                            <td>{$user['username']}</td>
+                            <td><a class='btn btn-danger' onClick='return excluir();' href='acao.php?acao=excluir&follower_id={$linha['follower_id']}&user_id={$linha['user_id']}'>Excluir</a></td>
+                          </tr>";
+                }
+                ?>
+            </tbody>
         </table>
     </div>
     <script>

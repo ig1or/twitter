@@ -1,4 +1,4 @@
-
+-- Feito
 CREATE TABLE users (
   id INT PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(255) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE users (
 );
 
 
-
+-- Feito
 CREATE TABLE Posts (
   id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT,
@@ -17,8 +17,7 @@ CREATE TABLE Posts (
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
-
+-- Feito
 CREATE TABLE Comments (
   id INT PRIMARY KEY AUTO_INCREMENT,
   post_id INT,
@@ -29,18 +28,18 @@ CREATE TABLE Comments (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-
+-- Feito
 CREATE TABLE Likes (
   post_id INT,
   user_id INT,
   PRIMARY KEY (post_id, user_id),
-  FOREIGN KEY (post_id) REFERENCES Posts(id),
+  FOREIGN KEY (post_id) REFERENCES Posts(id), 
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 
 
-
+-- Feito
 CREATE TABLE Reposts (
   post_id INT,
   user_id INT,
@@ -50,7 +49,7 @@ CREATE TABLE Reposts (
 );
 
 
-
+-- Feito
 CREATE TABLE Followers (
   user_id INT,
   follower_id INT,
@@ -58,5 +57,3 @@ CREATE TABLE Followers (
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (follower_id) REFERENCES users(id)
 );
-
-

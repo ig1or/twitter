@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ...
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,6 +43,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Abel&family=Red+Hat+Display:wght@300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
+        img{
+            width: 50%;
+        }
+        .comentario{
+            width: 25px;
+        }
+        .image-list {
+            list-style-type: none;
+            display: flex;
+        }
+        .image-list li {
+            margin-right: 10px; /* Ajuste o espaçamento horizontal conforme necessário */
+        }
         body {
             background-image: url("paper.gif");
             background-color: #f5f8fa;
@@ -141,79 +155,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a class="btn btn-light btn-back" href="../../index.php">Voltar</a>
         <h1>Cadastro de Publicação</h1>
 
-      <!-- ... código anterior ... -->
+        <!-- ... código anterior ... -->
 
-<div class="card">
-    <form action="acao.php" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="id">ID:</label>
-            <input type="text" class="form-control" id="id" name="id" value="<?php echo ($acao == 'editar') ? $dados['id'] : '0'; ?>" readonly>
+        <div class="card">
+            <form action="acao.php" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="id">ID:</label>
+                    <input type="text" class="form-control" id="id" name="id" value="<?php echo ($acao == 'editar') ? $dados['id'] : '0'; ?>" readonly>
+                </div>
+                <div>
+                    <label class="form-label" for="user_id">Usuário</label>
+                    <select class="form-select" name="user_id" id="user_id">
+                        <?php
+                        $conexao = Conexao::getInstance();
+
+                        $filtro = ""; // Defina o valor de filtro adequado aqui
+
+                        $consulta = $conexao->prepare("SELECT * FROM users WHERE username LIKE :filtro");
+                        $consulta->bindValue(':filtro', '%' . $filtro . '%');
+                        $consulta->execute();
+
+                        while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<option value='" . $linha['id'] . "'>" . $linha['username'] . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content">Conteúdo:</label>
+                    <textarea class="form-control" id="content" name="content" rows="4"><?php echo ($acao == 'editar') ? $dados['content'] : ''; ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="hashtags">Hashtags:</label>
+                    <input type="" class="form-control" id="hashtags" name="hashtags" value = "#">
+                </div>
+
+                <div class="form-group">
+                    <label for="created_at">Data Criação:</label>
+                    <input type="datetime-local" class="form-control" id="created_at" name="created_at">
+                </div>
+                <div class="form-group">
+                    <label for="image">Imagem:</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    <?php if ($acao == 'editar' && !empty($dados['image_url'])): ?>
+                        <img src="<?php echo $dados['image_url']; ?>" alt="Imagem">
+                    <?php endif; ?>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" name="acao" id="acao" value="salvar">Salvar</button>
+                </div>
+            </form>
         </div>
+
+        <!-- ... código posterior ... -->
+
         <div>
-    <label class="form-label" for="user_id">Usuário</label>
-    <select class="form-select" name="user_id" id="user_id">
         <?php
         $conexao = Conexao::getInstance();
-
-        $filtro = ""; // Defina o valor de filtro adequado aqui
-
-        $consulta = $conexao->prepare("SELECT * FROM users WHERE username LIKE :filtro");
-        $consulta->bindValue(':filtro', '%' . $filtro . '%');
-        $consulta->execute();
-
+        $consulta = $conexao->query("SELECT p.*, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id;");
         while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-            echo "<option value='" . $linha['id'] . "'>" . $linha['username'] . "</option>";
+            $image_url = "http://{$_SERVER['HTTP_HOST']}/twitter/assets/img/{$linha['image_url']}";
+
+            // Extrair as hashtags da publicação atual
+            $hashtags = explode(',', $linha['hashtags']);
+
+            echo "<div class='card'>
+        Criado por<div class='content'>{$linha['username']}</div>
+        <div class='content'>{$linha['content']}{$linha['hashtags']}</div>
+        <img src='{$image_url}' alt='Imagem'>
+        <div class='created-at'>{$linha['created_at']}</div>
+        <ul class='image-list'>
+            <li>
+                <a href='../../pages/Comments'>
+                    <img src='../../assets/img/comentario.png' alt='' class='comentario'>
+                </a>
+            </li>
+            <li>
+                <a href='../../pages/reposts'>
+                    <img src='../../assets/img/retuitar.png' alt='' class='comentario'>
+                </a>
+            </li>
+            <li>
+                <a href='../../pages/Likes'>
+                    <img src='../../assets/img/like.png' alt='' class='comentario'>
+                </a>
+            </li>
+            <li>
+                <a href='../../pages/followers'>
+                    <img src='../../assets/img/view.png' alt='' class='comentario'>
+                </a>
+            </li>
+        </ul>
+        <div class='actions'>
+            <a class='btn btn-danger' onClick='return excluir();' href='acao.php?acao=excluir&id={$linha['id']}'>Excluir</a>
+        </div>
+    </div>";
         }
         ?>
-    </select>
-</div>
-        <div class="form-group">
-            <label for="content">Conteúdo:</label>
-            <textarea class="form-control" id="content" name="content" rows="4"><?php echo ($acao == 'editar') ? $dados['content'] : ''; ?></textarea>
         </div>
-        <div class="form-group">
-            <label for="created_at">Data Criação:</label>
-            <input type="datetime-local" class="form-control" id="created_at" name="created_at">
-        </div>
-        <div class="form-group">
-            <label for="image">Imagem:</label>
-            <input type="file" class="form-control" id="image" name="image">
-            <?php if ($acao == 'editar' && !empty($dados['image_url'])): ?>
-                <img src="<?php echo $dados['image_url']; ?>" alt="Imagem">
-            <?php endif; ?>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-success" name="acao" id="acao" value="salvar">Salvar</button>
-        </div>
-    </form>
-</div>
-
-<!-- ... código posterior ... -->
-
-
-<div>
-    <?php
-    $conexao = Conexao::getInstance();
-    $consulta = $conexao->query("SELECT p.*, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id;");
-    while ($linha = $consulta->fetch(PDO::FETCH_ASSOC)) {
-        $image_url = "http://{$_SERVER['HTTP_HOST']}/twitter/assets/img/{$linha['image_url']}";
-        echo "<div class='card'>
-        <div class='content'>{$linha['username']}</div>
-            <div class='content'>{$linha['content']}</div>
-            <img src='{$image_url}' alt='Imagem'>
-            <div class='created-at'>{$linha['created_at']}</div>
-            <div class='actions'>
-                <a class='btn btn-danger' onClick='return excluir();' href='acao.php?acao=excluir&id={$linha['id']}'>Excluir</a>
-            </div>
-        </div>";
-    }
-    ?>
-</div>
-
+    </div>
 
     <script>
         function excluir() {
-            return confirm("Deseja realmente excluir este registro?");
+            return confirm("Deseja realmente excluir esta publicação?");
         }
     </script>
 </body>

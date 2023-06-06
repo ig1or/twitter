@@ -1,12 +1,12 @@
 <?php
-    session_start();
-    // Verifique se o usuário está logado
-    if (!isset($_SESSION['username'])) {
-        // Redirecione para a página de login se o usuário não estiver logado
-        header("Location: login.php");
-    }
+session_start();
+// Verifique se o usuário está logado
+if (!isset($_SESSION['username'])) {
+    // Redirecione para a página de login se o usuário não estiver logado
+    header("Location: login.php");
+}
 ?>
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,62 +17,83 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Abel&family=Red+Hat+Display:wght@300&display=swap" rel="stylesheet">
-    <script src="assets/js/script.js"></script>  
-    <?php
-        $aviso = isset($_GET['aviso']) ? $_GET['aviso'] : ""; 
+    <script src="assets/js/script.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        switch ($aviso) {
-            case 'sucesso':
-                $msg = "Proposta Enviada com Sucesso!";
-                alert($msg);
-                break;
-            default:
-                # code...
-                break;
-        }
-        function alert($msg) {
-            echo "<script type='text/javascript'>alert('$msg');</script>";
-        }
-    ?> 
-</head>
-<style>
-        img{
-            width: 50px;
-        }
-        body{
+        body {
             background-color: #C6E2FF;
+            font-family: 'Abel', sans-serif;
         }
-        .menu{
-            list-style:none;
-            border:1px solid #c0c0c0;
-            float:left;
-            }
-        .menu li{
-        position:relative;
-        float:left;
-        border-right:1px solid #c0c0c0;
-        }
-        .menu li a{color:#333; text-decoration:none; padding:5px 10px; display:block;}
 
-        .menu li a:hover{
-        background:#333;
-        color:#fff;
-        -moz-box-shadow:0 3px 10px 0 #CCC;
-        -webkit-box-shadow:0 3px 10px 0 #ccc;
-        text-shadow:0px 0px 5px #fff;
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #fff;
         }
-</style>
-    <body>
-    <nav>
-  <ul class="menu">
-		<li><a href="#">Home - ></a></li>
-	  
-	  	<li><a class="logout-btn" href="login.php">Sair</a></li>
-</ul>
-</nav>
-      <img src="assets/img/Twitter.png" alt="">
-        <h1># Explorar</h1>
-      <img src="assets/img/conf.png" alt="">
-      <li><a href="pages/posts">+ Posts</a>
-    </body>
-    
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            margin-right: 10px;
+        }
+
+        .menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .menu li {
+            margin-right: 20px;
+        }
+
+        .menu li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .menu li a:hover {
+            color: #fff;
+            background-color: #333;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-family: 'Red Hat Display', sans-serif;
+            font-weight: 300;
+            font-size: 24px;
+            text-align: center;
+        }
+       .t{
+        width: 100%;
+       }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="assets/img/Twitter.png" alt="">
+            <h1># Explorar</h1>
+        </div>
+        <ul class="menu">
+            <li><a href="#">Home</a></li>
+            <li><a href="pages/posts">+ Posts</a></p></li>
+            <li><a class="logout-btn" href="login.php">Sair</a></li>
+        </ul>
+    </div>
+     <img src="assets/img/twitter-logo.jpeg" alt="" class = "t">  
+ 
+</body>
+</html>
